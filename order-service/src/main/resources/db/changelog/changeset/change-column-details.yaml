@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: change-column-details
+      author: Irina Bir
+      changes:
+        - renameColumn:
+            tableName: order_details
+            newColumnName: item_name
+            oldColumnName: itemName

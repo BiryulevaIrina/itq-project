@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: rollback-type-column-order
+      author: Irina Bir
+      changes:
+        - modifyDataType:
+            columnName: date
+            newDataType: DATE
+            tableName: order
