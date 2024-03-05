@@ -2,6 +2,7 @@ package ru.biryuleva.itqproject.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.biryuleva.itqproject.client.Client;
 import ru.biryuleva.itqproject.dto.NumberDto;
 import ru.biryuleva.itqproject.dto.OrderDetailsDto;
 import ru.biryuleva.itqproject.dto.OrderDto;
@@ -14,9 +15,7 @@ import ru.biryuleva.itqproject.repository.OrderDetailsRepository;
 import ru.biryuleva.itqproject.repository.OrderRepository;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +23,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailsRepository detailsRepository;
+    private final Client client;
 
     @Override
     public OrderDto create(OrderDto orderDto) {
-        NumberDto number = getNumber();//client.getNumber();
+        NumberDto number = client.getNumber();
         orderDto.setNumber(number.getNumber());
+        orderDto.setDate(LocalDate.now());
         return OrderMapper.toOrderDto(orderRepository.save(OrderMapper.mapToOrder(orderDto)));
     }
 
@@ -54,22 +55,6 @@ public class OrderServiceImpl implements OrderService {
         OrderDetails details = OrderDetailsMapper.mapToOrderDetails(detailsDto);
         details.setOrder(order);
         return OrderDetailsMapper.mapToOrderDetailsDto(detailsRepository.save(details), OrderMapper.toOrderDto(order));
-    }
-
-    private NumberDto getNumber() {
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyMMdd");
-        String dateString = dtf.format(date);
-
-        Random rand = new Random();
-        int randomNumber = rand.nextInt(900000000) + 100000000;
-        String randomNumberString = String.format("%09d", randomNumber);
-
-        String finalNumber = dateString + randomNumberString;
-
-        long number = Long.parseLong(finalNumber);
-
-        return new NumberDto(number);
     }
 
 }

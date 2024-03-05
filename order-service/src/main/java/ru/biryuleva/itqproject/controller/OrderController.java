@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-@Tag(name = "itq project", description = "Управляет заказами")
+@Tag(name = "order-service", description = "Микросервис управления заказами")
 public class OrderController {
 
     private final OrderService orderService;

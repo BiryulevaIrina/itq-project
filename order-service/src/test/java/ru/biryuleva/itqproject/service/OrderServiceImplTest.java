@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.biryuleva.itqproject.client.Client;
+import ru.biryuleva.itqproject.dto.NumberDto;
 import ru.biryuleva.itqproject.dto.OrderDetailsDto;
 import ru.biryuleva.itqproject.dto.OrderDto;
 import ru.biryuleva.itqproject.model.Order;
@@ -33,6 +35,9 @@ class OrderServiceImplTest {
     @Mock
     private OrderDetailsRepository detailsRepository;
 
+    @Mock
+    private Client client;
+
     private OrderDto orderDto1;
     private OrderDetailsDto detailsDto1;
     private Order order;
@@ -46,20 +51,26 @@ class OrderServiceImplTest {
         order = new Order(1L, 100.0, date, 123654L);
         detailsDto1 = new OrderDetailsDto(1L, "Product", 100L, orderDto1);
         details = new OrderDetails(1L, "Product", 100L, order);
+
     }
 
     @Test
     void createOrderTest() {
 
+        NumberDto mockNumberDto = new NumberDto(123456L);
+        when(client.getNumber()).thenReturn(mockNumberDto);
+
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
-        OrderDto orderDto = service.create(orderDto1);
+        OrderDto resultOrderDto = service.create(orderDto1);
 
-        assertEquals(order.getId(), orderDto.getId());
-        assertEquals(order.getAmount(), orderDto.getAmount());
-        assertEquals(order.getDate(), orderDto.getDate());
-        assertEquals(order.getNumber(), orderDto.getNumber());
+        assertEquals(order.getId(), resultOrderDto.getId());
+        assertEquals(order.getAmount(), resultOrderDto.getAmount());
+        assertEquals(order.getDate(), resultOrderDto.getDate());
+        assertEquals(order.getNumber(), resultOrderDto.getNumber());
 
+        verify(client).getNumber();
+        verify(orderRepository).save(any(Order.class));
     }
 
     @Test

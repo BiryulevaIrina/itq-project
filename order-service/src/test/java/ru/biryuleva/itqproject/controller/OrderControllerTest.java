@@ -43,7 +43,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void createNewOrder() throws Exception {
+    void createNewOrderTest() throws Exception {
         when(service.create(any())).thenReturn(dto);
         mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -52,7 +52,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void createOrderDetails() throws Exception {
+    void createOrderDetailsTest() throws Exception {
         when(service.addOrderDetails(detailsDto, 1L)).thenReturn(detailsDto);
 
         mockMvc.perform(post("/orders/1/details")
@@ -62,7 +62,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrderByMaxAmount() throws Exception {
+    void getOrderByMaxAmountTest() throws Exception {
         OrderDto dto1 = new OrderDto(2L, 200.0,
                 LocalDate.of(2024, Month.MARCH, 4), 123456L);
         when(service.getOrderByMaxAmount(any(LocalDate.class))).thenReturn(dto1);
@@ -77,7 +77,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrders() throws Exception {
+    void getOrdersTest() throws Exception {
         LocalDate startDate = LocalDate.of(2024, Month.MARCH, 2);
         LocalDate endDate = LocalDate.of(2024, Month.MARCH, 5);
         mockMvc.perform(get("/orders")
